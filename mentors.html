@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find a Mentor - InternForage</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --primary-color: #ff0000;
+            --accent-color: #ff4d4d;
+            --secondary-color: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .home-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 12px 30px;
+            background-color: #000000;
+            color: var(--secondary-color);
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .home-btn:hover {
+            background-color: #333333;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .category-filter {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            margin-bottom: 0;
+            text-align: center;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .hide-nav {
+            transform: translateY(-100px);
+            opacity: 0;
+        }
+
+        .mentors-container {
+            max-width: 1200px;
+            margin: 100px auto 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .dropdown-btn {
+            padding: 12px 30px;
+            font-size: 16px;
+            background-color: #000000;
+            color: var(--secondary-color);
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-btn:hover {
+            background-color: #333333;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            z-index: 1;
+            overflow: hidden;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .dropdown-content a {
+            color: #333;
+            padding: 12px 20px;
+            text-decoration: none;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-content a:hover {
+            background-color: var(--accent-color);
+            color: white;
+            transform: translateX(10px);
+        }
+
+        .show {
+            display: block;
+        }
+
+        .mentor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .mentor-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            transform: translateY(0);
+        }
+
+        .mentor-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .mentor-info {
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .profile-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .mentor-card:hover .profile-image {
+            transform: scale(1.1);
+        }
+
+        .mentor-details {
+            flex: 1;
+        }
+
+        .mentor-name {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .expertise-area {
+            font-size: 15px;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+
+        .current-position {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .connect-btn {
+            display: inline-block;
+            padding: 10px 25px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .connect-btn:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(255, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .mentors-container {
+                margin-top: 100px;
+                padding: 20px;
+            }
+
+            .mentor-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .mentor-info {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .profile-image {
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="home-btn">
+        <i class="fas fa-home"></i>
+         
+    </a>
+
+    <div class="mentors-container">
+        <div class="category-filter">
+            <button onclick="toggleDropdown()" class="dropdown-btn">
+                <i class="fas fa-filter"></i>
+                Select Category
+            </button>
+            <div id="categoryDropdown" class="dropdown-content">
+                <a href="#" onclick="filterMentors('all')">All Categories</a>
+                <a href="#" onclick="filterMentors('IT & Software')">IT & Software</a>
+                <a href="#" onclick="filterMentors('Electronics and IC design, VLSI')">Electronics and IC design, VLSI</a>
+                <a href="#" onclick="filterMentors('Video Editing')">Video Editing</a>
+                <a href="#" onclick="filterMentors('Digital Marketing')">Digital Marketing</a>
+                <a href="#" onclick="filterMentors('Government Jobs')">Government Jobs</a>
+                <a href="#" onclick="filterMentors('Entreprenuership')">Entreprenuership</a>
+                <a href="#" onclick="filterMentors('Engineering Projects')">Engineering Projects</a>
+            </div>
+        </div>
+
+        <div class="mentor-grid" id="mentorGrid">
+            <div class="mentor-card" data-category="IT & Software">
+                <div class="mentor-info">
+                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/pavanvarma-IT-R22tfJKFZADCYwn4rIoAr6aOM1RTJZ.jpeg" alt="Mentor" class="profile-image">
+                    <div class="mentor-details">
+                        <div class="mentor-name">U Pavan varma</div>
+                        <div class="expertise-area">IT & Software</div>
+                        <div class="current-position">Cloud Associate Amazon</div>
+                        <a href="https://www.linkedin.com/in/uppalapati-sai-ganesh-pavan-varma-7989b4228" target="_blank" class="connect-btn">Connect</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mentor-card" data-category="Engineering Projects">
+                <div class="mentor-info">
+                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Nikhil_projects-DcqWFC08YwlsPlqnRjM8KA49FxzR3B.jpeg" alt="Mentor" class="profile-image">
+                    <div class="mentor-details">
+                        <div class="mentor-name">A Nikhil chaitanya</div>
+                        <div class="expertise-area">Engineering Projects</div>
+                        <div class="current-position">Design Engineer HAL</div>
+                        <a href="https://www.linkedin.com/in/nikhilchaitanya" target="_blank" class="connect-btn">Connect</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mentor-card" data-category="Engineering Projects">
+                <div class="mentor-info">
+                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Sk.Afzal_Projects-R28DaIp0P5hUzBlLWSSNP5hK0pn8oY.jpeg" alt="Mentor" class="profile-image">
+                    <div class="mentor-details">
+                        <div class="mentor-name">Sk. Afzal</div>
+                        <div class="expertise-area">Engineering Projects</div>
+                        <div class="current-position">Presentation Engineer, WNS</div>
+                        <a href="https://www.linkedin.com/in/shaikafzal7" target="_blank" class="connect-btn">Connect</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mentor-card" data-category="IT & Software">
+                <div class="mentor-info">
+                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Damu_IT-9v3cS8dxCfQDzkdPeOPbg3no1miqGM.jpeg" alt="Mentor" class="profile-image">
+                    <div class="mentor-details">
+                        <div class="mentor-name">Damodar P</div>
+                        <div class="expertise-area">IT & Software</div>
+                        <div class="current-position">Senior Security Engineer WELLSFARGO</div>
+                        <a href="https://www.linkedin.com/in/damodar-perumallaa-b7a31387" target="_blank" class="connect-btn">Connect</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mentor-card" data-category="Entreprenuership">
+                <div class="mentor-info">
+                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Teja_Entreprenuer-sbVXG2h0HuJEL6oOdrW2DxIhAT1MwZ.jpeg" alt="Mentor" class="profile-image">
+                    <div class="mentor-details">
+                        <div class="mentor-name">Teja surishetty</div>
+                        <div class="expertise-area">Entreprenuership</div>
+                        <div class="current-position">Founder@18startups</div>
+                        <a href="https://www.linkedin.com/in/surishettiteja" target="_blank" class="connect-btn">Connect</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mentor-card" data-category="Electronics and IC design, VLSI">
+                <div class="mentor-info">
+                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/tarun_VLSI-mFvWEWg20DQP6ElAY11WpBG0LVlclk.jpeg" alt="Mentor" class="profile-image">
+                    <div class="mentor-details">
+                        <div class="mentor-name">Tarun PV</div>
+                        <div class="expertise-area">Electronics and IC design, VLSI</div>
+                        <div class="current-position">VLSI Engineer</div>
+                        <a href="https://www.linkedin.com/in/saitarunpelluru2020" target="_blank" class="connect-btn">Connect</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mentor-card" data-category="Entreprenuership">
+                <div class="mentor-info">
+                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Melvin_projects-dtRYbAfW8IEMxOlDC5vV6fawmNNPRZ.jpeg" alt="Mentor" class="profile-image">
+                    <div class="mentor-details">
+                        <div class="mentor-name">Melvin George M</div>
+                        <div class="expertise-area">Entreprenuership</div>
+                        <div class="current-position">Founder @i3dFabs</div>
+                        <a href="https://www.linkedin.com/in/melvin-george-m-17051997" target="_blank" class="connect-btn">Connect</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mentor-card" data-category="IT & Software">
+                <div class="mentor-info">
+                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/nagendrabro_It-V9s66h4g0jC8vFOPW8k3M7pkNIuej2.jpeg" alt="Mentor" class="profile-image">
+                    <div class="mentor-details">
+                        <div class="mentor-name">Nagendra M</div>
+                        <div class="expertise-area">IT & Software</div>
+                        <div class="current-position">Software Engineer, Propel labs</div>
+                        <a href="https://www.linkedin.com/in/nagendra-mantrabuddi" target="_blank" class="connect-btn">Connect</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mentor-card" data-category="Entreprenuership">
+                <div class="mentor-info">
+                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Nikhil_projects-DcqWFC08YwlsPlqnRjM8KA49FxzR3B.jpeg" alt="Mentor" class="profile-image">
+                    <div class="mentor-details">
+                        <div class="mentor-name">A Nikhil chaitanya</div>
+                        <div class="expertise-area">Entreprenuership</div>
+                        <div class="current-position">Founder Namoona 3DLabs</div>
+                        <a href="https://www.linkedin.com/in/nikhilchaitanya" target="_blank" class="connect-btn">Connect</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mentor-card" data-category="Engineering Projects">
+                <div class="mentor-info">
+                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/tarun_VLSI-mFvWEWg20DQP6ElAY11WpBG0LVlclk.jpeg" alt="Mentor" class="profile-image">
+                    <div class="mentor-details">
+                        <div class="mentor-name">Tarun PV</div>
+                        <div class="expertise-area">Engineering Projects</div>
+                        <div class="current-position">Project Engineer</div>
+                        <a href="https://www.linkedin.com/in/saitarunpelluru2020" target="_blank" class="connect-btn">Connect</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let lastScrollTop = 0;
+        const homeBtn = document.querySelector('.home-btn');
+        const categoryFilter = document.querySelector('.category-filter');
+
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > lastScrollTop) {
+                // Scrolling down
+                homeBtn.classList.add('hide-nav');
+                categoryFilter.classList.add('hide-nav');
+            } else {
+                // Scrolling up
+                homeBtn.classList.remove('hide-nav');
+                categoryFilter.classList.remove('hide-nav');
+            }
+            
+            lastScrollTop = scrollTop;
+        });
+
+        function toggleDropdown() {
+            document.getElementById("categoryDropdown").classList.toggle("show");
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.matches('.dropdown-btn')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                for (var i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+
+        function filterMentors(category) {
+            const mentorCards = document.querySelectorAll('.mentor-card');
+            mentorCards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            document.getElementById("categoryDropdown").classList.remove("show");
+        }
+    </script>
+</body>
+</html> 
